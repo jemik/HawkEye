@@ -27,7 +27,7 @@ function connect(ppid, pid) {
 		g.setEdge(ppid, pid, {
 			label: proc_data[pid]['injected'] ? "Inject" : "",
 			labelStyle: "fill: #f00; font-weight: bold; font-size: 20px;transform: rotate(-30deg);",
-			style: "stroke: #eeeeee; stroke-width: 10px; fill: none; " + (proc_data[pid]['injected'] ? "stroke-dasharray: 5, 5;transform: rotate(-30deg);" : ""),
+			style: "stroke: #eee; stroke-width: 8px; fill: none; " + (proc_data[pid]['injected'] ? "stroke-dasharray: 5, 5;transform: rotate(-30deg);" : ""),
 			arrowheadStyle: "fill: none",
 			curve: d3.curveStep,
 		});
