@@ -89,3 +89,6 @@ a {
 .sidenav i {
 	width: 37px;
 }
+.edgePaths {
+	transform: translate(220px) !important;
+}
