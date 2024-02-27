@@ -129,7 +129,7 @@ function drawProcessFlow(data) {
 	// Define the skew and scale based on your desired perspective
 	var skewX = -20; // skew angle in degrees
 	var scaleY = 0.7; // scale factor (0.0 - 1.0)
-	var skewXDegrees = -20; // Adjusted skew angle in degrees
+	var skewXDegrees = -5; // Adjusted skew angle in degrees
 	// Apply perspective effect to each edge
 	var edgeCenters = {};
 	svgGroup.selectAll('.edgePath path').each(function () {
@@ -171,63 +171,46 @@ function drawProcessFlow(data) {
 	});
 
 	// Apply transformations to the edges
-	svgGroup.selectAll('.edgePath path').each(function () {
-		var edge = d3.select(this);
-		var edgeData = edge.data()[0];
-		var sourceNode = g.node(edgeData.v);
-		var targetNode = g.node(edgeData.w);
-	  
-		// The skew transformation function
-		var skewTransform = (nodeY) => {
-		  var skewOffset = Math.tan(skewXDegrees * Math.PI / 180) * (nodeY - svgHeight / 4);
-		  var yOffsetProportion = (nodeY - svgHeight / 4) / svgHeight;
-		  var ySpacingAdjustment = skewOffset * yOffsetProportion;
-		  return {
-			x: skewOffset,
-			y: -scaleY * ySpacingAdjustment
-		  };
-		};
-	  
-		// Applying the skew transformation to the source and target nodes
-		var sourceSkew = skewTransform(sourceNode.y);
-		var targetSkew = skewTransform(targetNode.y);
-	  
-		// Adjusting the source and target positions by the skew
-		var newSource = { 
-		  x: sourceNode.x + sourceSkew.x, 
-		  y: sourceNode.y + sourceSkew.y 
-		};
-		var newTarget = { 
-		  x: targetNode.x + targetSkew.x, 
-		  y: targetNode.y + targetSkew.y 
-		};
-	  
-		// Determine the mid-point for the Y-axis based on the skewed positions
-		var midY = newTarget.y + (newSource.y - newTarget.y) * 0.5;
-	  
-		// Determine the X-axis position for the step, which is offset towards the target
-		var stepX = newSource.x + (newTarget.x - newSource.x) * 0.25; // Adjust this ratio as needed
-	  
-		// Create the control points for the stepped path, offsetting the step towards the target
-		var controlPoints = [
-		  newSource,
-		  { x: stepX, y: newSource.y }, // Step occurs at the source y, offset x
-		  { x: stepX, y: midY }, // Middle control point to create the step effect
-		  { x: newTarget.x, y: midY }, // Step occurs at the target y, target x
-		  newTarget
-		];
-	  
-		// Generate the stepped path using d3.curveBasis
-		var stepPath = d3.line()
-		  .x(d => d.x)
-		  .y(d => d.y)
-		  .curve(d3.curveStep);
-	  
-		// Apply the new path to the edge
-		edge.attr('d', stepPath(controlPoints));
-	  });
-	  
-
+	// Apply transformations to the edges
+svgGroup.selectAll('.edgePath path').each(function () {
+	var edge = d3.select(this);
+	var edgeData = edge.data()[0];
+	var sourceNode = g.node(edgeData.v);
+	var targetNode = g.node(edgeData.w);
+  
+	// Assume the nodes have a 'width' and 'height' attribute
+	var sourceWidth =57;
+	var targetWidth = 57;
+	var sourceHeight = 168;
+	var targetHeight = 168;
+  
+	// Calculate the starting and ending points
+	var startX = sourceNode.x + sourceWidth / 2;
+	var startY = sourceNode.y;
+	var endX = targetNode.x - targetWidth / 2;
+	var endY = targetNode.y;
+  
+	// Calculate the mid-point for the X-axis
+	var midX = (startX + endX) / 2;
+  
+	// Control points
+	var controlPoints = [
+	  { x: startX, y: startY }, // Start at the edge of the source node
+	  { x: midX, y: startY }, // First horizontal line to mid-point X
+	  { x: midX, y: endY }, // Vertical line to level with the target node
+	  { x: endX, y: endY } // Last horizontal line to the edge of the target node
+	];
+  
+	// Generate the stepped path using d3.line()
+	var stepPath = d3.line()
+	  .x(d => d.x)
+	  .y(d => d.y)
+	  .curve(d3.curveStepAfter);
+  
+	// Apply the new path to the edge
+	edge.attr('d', stepPath(controlPoints));
+  });
+  
 
 	svgGroup.selectAll('.edgePath path')
 		.attr('marker-end', 'url(#standard-arrowhead)');

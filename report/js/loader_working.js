@@ -146,6 +146,7 @@ function drawProcessFlow(data) {
 		updateArrowOrientation(this, 'processcreate');
 	});
 
+    
 	// Custom rendering for the nodes
 	svgGroup.selectAll("g.node").each(function (id) {
 		var node = d3.select(this);
