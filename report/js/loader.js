@@ -231,8 +231,8 @@ function drawProcessFlow(data) {
 		console.log(`Node ${nodeId} - data-node-id set to:`, node.attr('data-node-id'));
 
 		var pid = id;
-		createLabelWithBackground(node, proc_data[pid]['name'], 45, "8px", "#e8eff2", "#000", 10, 0);
-		createLabelWithBackground(node, "PID: " + pid, 56, "8px", "#e8eff2", "#000", 10, 0);
+		createLabelWithBackground(node, proc_data[pid]['name'], 45, "8px", "#e8eff2", "#000", 10, 1);
+		createLabelWithBackground(node, "PID: " + pid, 56, "8px", "#e8eff2", "#000", 10, 1);
 		// Draw the circle for the node
 		node.insert("circle", ":first-child")
 			.attr("r", 30) // Set the radius for the circle
@@ -247,8 +247,8 @@ function drawProcessFlow(data) {
 
 		node.append("path")
 			.attr("d", nodebg) // Your gear path data
-			.attr("fill", "#ccc") // The fill color for the gear
-			.attr("stroke", "#fff")
+			.attr("fill", "#a1a1a1") // The fill color for the gear
+			.attr("stroke", "#a1a1a1")
 			.attr("stroke-width", "5px")
 			// Adjust the translation values (translateX, translateY) to position the gear
 			.attr("transform", (d) => {
@@ -319,6 +319,7 @@ function createLabelWithBackground(node, text, dy, fontSize, rectColor, fontcolo
 		.text(text)
 		.attr("text-anchor", "start")
 		.style("fill", fontcolor)
+		.attr('font-family', 'Arial')
 		.style("font-size", fontSize)
 		.attr('transform', 'rotate(-30)')
 		.style('text-transform', 'uppercase')
