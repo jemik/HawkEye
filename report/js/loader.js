@@ -19,7 +19,6 @@ function connect(ppid, pid) {
 		style: "fill: none; stroke: none; stroke-width: 3px;", // Updated color
 		shape: "circle", // Set the shape to circle
 		padding: 35, // Adjust padding as necessary
-		margin: 47,
 		id: pid,
 	});
 
@@ -248,9 +247,9 @@ function drawProcessFlow(data) {
 
 		node.append("path")
 			.attr("d", nodebg) // Your gear path data
-			.attr("fill", "#000000") // The fill color for the gear
-			.attr("stroke", "#575757")
-			.attr("stroke-width", "4px")
+			.attr("fill", "#ccc") // The fill color for the gear
+			.attr("stroke", "#fff")
+			.attr("stroke-width", "5px")
 			// Adjust the translation values (translateX, translateY) to position the gear
 			.attr("transform", (d) => {
 				var translateX = -35; // Adjust horizontal position
@@ -260,7 +259,7 @@ function drawProcessFlow(data) {
 			});
 		node.append("path")
 			.attr("d", nodecenter) // Your gear path data
-			.attr("fill", "#ffffff") // The fill color for the gear
+			.attr("fill", "#fff") // The fill color for the gear
 			// Adjust the translation values (translateX, translateY) to position the gear
 			.attr("transform", (d) => {
 				var translateX = -35; // Adjust horizontal position
