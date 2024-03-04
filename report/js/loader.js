@@ -596,7 +596,7 @@ function fillGeneralActivity(data) {
 	});
 }
 
-$.getJSON("/output/data2.json").then(function (data) {
+$.getJSON("/output/data3.json").then(function (data) {
 	drawProcessFlow(data["processes"]);
 	fillFileActivity(data["files"]);
 	fillNetworkActivity(data["network"]);

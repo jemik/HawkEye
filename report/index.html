@@ -193,6 +193,31 @@
 				</ul>
 			</div>
 		</div>
+		<div id="screenshot_container"></div>
 	</div>
+
+	<script>
+        // Function to load data.json and display screenshots
+        function loadAndDisplayScreenshots() {
+            // Assuming data.json is in the same directory as your index.html
+            fetch('data.json')
+                .then(response => response.json())
+                .then(data => {
+                    const container = document.getElementById('screenshot_container');
+                    // Assuming screenshots are stored under data.general.screenshots
+                    data.general.screenshots.forEach(filename => {
+                        const img = document.createElement('img');
+                        img.src = filename; // Set the source of the image
+                        img.style.width = '100%'; // Optional: Set image width
+                        img.alt = 'Screenshot'; // Set an alt text for the image
+                        container.appendChild(img); // Append the image to the container
+                    });
+                })
+                .catch(error => console.error('Error loading screenshots:', error));
+        }
+
+        // Call the function when the page loads
+        window.onload = loadAndDisplayScreenshots;
+    </script>
 </body>
 </html>

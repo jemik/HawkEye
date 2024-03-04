@@ -9,6 +9,7 @@ import webbrowser
 import threading
 import time
 import hashlib
+from PIL import ImageGrab
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 # Hooked functions
@@ -17,6 +18,10 @@ process_hooks =  ['CreateProcessInternalW', 'OpenProcess', 'VirtualAllocEx', 'Vi
 file_hooks =     ['CreateFile', 'WriteFile', 'MoveFile', 'CopyFile', 'DeleteFile']
 registry_hooks = ['RegCreateKey', 'RegOpenKey', 'RegQueryValueEx', 'RegSetValueEx', 'RegDeleteValue']
 internet_hooks = ['InternetOpenUrl', 'GetAddrInfo']
+
+# Screenshot location
+screenshots_dir = "screenshots"
+#os.makedirs(f"{report\\screenshots_dir}", exist_ok=True)
 
 report = {
 	"processes": {},
@@ -59,6 +64,9 @@ report = {
 		],
 
 		"imports": [
+		],
+		
+		"screenshots": [
 		]
 	},
 	"sample": {
@@ -101,8 +109,26 @@ dns_domains  = set()
 executed_commands = set()
 dynamic_imports = set()
 mutexes         = set()
+captured_screenshots = set()
 
 ##########################################################################################################
+
+def capture_screenshot(event_name="screenshot"):
+    """
+    Captures a screenshot and saves it to the screenshots directory
+    with a filename based on the event name and timestamp.
+    """
+    timestamp = time.strftime("%Y%m%d-%H%M%S")
+    filename = f"{event_name}_{timestamp}.png"
+    disk_path = f"report\\{screenshots_dir}"
+    filepath = os.path.join(disk_path, filename)
+    screenshot = ImageGrab.grab()
+    screenshot.save(filepath)
+    url_path = f"{screenshots_dir}/{filename}"
+    print(f"Screenshot saved: {filepath}")
+    return url_path
+
+
 def on_mem_message(message, data):
     print("[%s] => %s" % (message, data))
 
@@ -140,6 +166,9 @@ def handle_process(payload):
 			executed_commands.add(payload['cmd'])
 		else:
 			executed_commands.add(payload['app'])
+		# Capture a screenshot for process creation events
+		screenshots.add(capture_screenshot(event_name=f"process_created_{payload['pid']}"))
+		
 
 	elif(payload['hook'] == 'OpenProcess'):
 		phandle_to_pid[payload['handle']] = payload['pid']
@@ -310,6 +339,8 @@ def instrument(pid, ppid, name, is_spawned):
 	#perform_memory_dump(pid, session)
 	if is_spawned:
 		device.resume(pid)
+		# Capture a screenshot for process creation events
+		captured_screenshots.add(capture_screenshot(event_name=f"process_created_{pid}"))
         
 
 
@@ -386,6 +417,7 @@ report["network"]["dns"]  = list(dns_domains)
 report["general"]["commands"] = list(executed_commands)
 report["general"]["imports"]  = list(dynamic_imports)
 report["general"]["mutexes"]  = list(mutexes)
+report["general"]["screenshots"] = list(captured_screenshots)
 
 os.chdir('report')
 if not os.path.exists('output'):
