@@ -92,3 +92,13 @@ a {
 .edgePaths {
 	transform: translate(220px) !important;
 }
+/* Style the container to enable horizontal scrolling */
+#screenshot_container {
+	display: flex;
+	overflow-x: auto; /* Enable horizontal scrolling */
+	white-space: nowrap; /* Prevent line breaks */
+}
+#screenshot_container img {
+	max-height: 200px; /* Adjust based on your preference */
+	margin-right: 10px; /* Space between images */
+}
