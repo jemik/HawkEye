@@ -14,17 +14,8 @@ import argparse
 
 report = {
 	"processes": {},
-
-	"commands": [
-	],
     	"general": {
-		"mutexes": [
-		],
-
 		"imports": [
-		],
-		
-		"screenshots": [
 		]
 	},
 	"sample": {
@@ -299,7 +290,7 @@ def on_message(message, data):
 
             # Since 'processName' and 'imageFilePath' are not directly provided, adjust accordingly
             # Assuming 'applicationName' serves as the 'processName'/'imageFilePath' in this context
-            print(f"[!] {action} called: PID: {pid}, Process Name: {applicationName}, Image File Path: {applicationName}, Command Line: {commandLine}")
+            print(f"[!] CreateProcess called: PID: {pid}, Process Name: {applicationName}, Image File Path: {applicationName}, Command Line: {commandLine}")
 
 
 
@@ -401,5 +392,5 @@ if __name__ == "__main__":
     report["processes"] = proc_data
     report["general"]["commands"] = list(executed_commands)
     # frida.kill(pid) # or maybe loop through processes
-    print(json.dump(report))
+    print(json.dumps(report))
 
